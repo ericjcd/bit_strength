@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            category="com.bit.strength"
+            class="com.bit.strength.card.CardView"
+            icon="icons/sample.gif"
+            id="com.bit.strength.views.CardView"
+            name="CardView">
+      </view>
+      <view
+            category="com.bit.strength"
+            class="com.bit.strength.stress.StressView"
+            icon="icons/sample.gif"
+            id="com.bit.strength.views.StressView"
+            name="StressView">
+      </view>
+      <view
+            allowMultiple="false"
+            class="com.bit.strength.capture.Capture"
+            icon="icons/sample.gif"
+            id="com.bit.strength.view.Capture"
+            name="Capture"
+            restorable="true">
+      </view>
+   </extension>
+   <extension
+         point="org.eclipse.ui.perspectiveExtensions">
+      <perspectiveExtension
+            targetID="org.eclipse.jdt.ui.JavaPerspective">
+         <view
+               ratio="0.5"
+               relative="org.eclipse.ui.views.ProblemView"
+               relationship="right"
+               id="com.bit.strength.views.CaptureView">
+         </view>
+      </perspectiveExtension>
+      <perspectiveExtension
+            targetID="org.eclipse.jdt.ui.JavaPerspective">
+         <view
+               id="com.bit.strength.views.StressView"
+               ratio="0.5"
+               relationship="right"
+               relative="org.eclipse.ui.views.ProblemView">
+         </view>
+      </perspectiveExtension>
+   </extension>
+   <extension
+         point="org.eclipse.help.contexts">
+      <contexts
+            file="contexts.xml">
+      </contexts>
+      <contexts
+            file="contexts.xml">
+      </contexts>
+   </extension>
+
+</plugin>

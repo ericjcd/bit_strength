@@ -1,0 +1,26 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Strength
+Bundle-SymbolicName: com.bit.strength;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: com.bit.strength.Activator
+Bundle-Vendor: BIT
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-ActivationPolicy: lazy
+Bundle-ClassPath: lib/jcommon-1.0.23.jar,
+ lib/jfreechart-1.0.19.jar,
+ lib/jfreechart-1.0.19-experimental.jar,
+ lib/jfreechart-1.0.19-swt.jar,
+ lib/json-lib-2.4-jdk15.jar,
+ swing2swt.jar,
+ lib/jpcap.jar,
+ lib/swing2swt.jar,
+ lib/ezmorph-1.0.6.jar,
+ lib/commons-beanutils-1.9.2.jar,
+ lib/commons-collections-3.2.1.jar,
+ lib/commons-lang-2.6.jar,
+ lib/commons-logging-1.2.jar,
+ .
+Bundle-NativeCode: lib/jpcap.dll ; osname=win32 ; processor=x86

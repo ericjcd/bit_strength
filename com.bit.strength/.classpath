@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry exported="true" kind="lib" path="lib/commons-beanutils-1.9.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/commons-collections-3.2.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/commons-lang-2.6.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/commons-logging-1.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/ezmorph-1.0.6.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/json-lib-2.4-jdk15.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jfreechart-1.0.19-experimental.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jfreechart-1.0.19-swt.jar"/>
+	<classpathentry kind="lib" path="lib/mysql-connector-java-5.1.39-bin.jar" sourcepath="lib/mysql-connector-java-5.1.39.zip"/>
+	<classpathentry kind="lib" path="lib/c3p0-0.9.1.2.jar"/>
+	<classpathentry kind="lib" path="lib/commons-dbutils-1.6.jar" sourcepath="lib/commons-dbutils-1.6-src.zip"/>
+	<classpathentry exported="true" kind="lib" path="lib/jna-4.1.0.jar" sourcepath="lib/jna-master.zip"/>
+	<classpathentry exported="true" kind="lib" path="lib/jna-platform-4.1.0.jar"/>
+	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
+	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
+	<classpathentry kind="src" path="src">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="com.bit.strength/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="lib/jcommon-1.0.23.jar"/>
+	<classpathentry kind="lib" path="lib/jfreechart-1.0.19.jar"/>
+	<classpathentry kind="lib" path="lib/swing2swt.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jpcap.jar" sourcepath="lib/Jpcap-master.zip"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
