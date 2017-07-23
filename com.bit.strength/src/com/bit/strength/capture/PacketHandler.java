@@ -18,6 +18,10 @@ public class PacketHandler implements PacketReceiver {
 	private JpcapCaptor m_pcap;
 
 	private TableViewer viewer;
+	public TableViewer getViewer() {
+		return viewer;
+	}
+
 	private Object owner;
 
 	public PacketHandler(TableViewer viewer, Object owner, JpcapCaptor m_pcap) {

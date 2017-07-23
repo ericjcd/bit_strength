@@ -83,6 +83,7 @@ public class ICMPRunnable extends NetRunnable {
 //				if (messages.get(i).isReceiveNext()) {
 //					;//
 //				}
+				dataStorage.storageDataAtLocal(3, packetToSend);
 				
 				count++;
 				System.out.println("count: " + count + ", repeat: " + messages.get(msg_i).getRepeat() + ", duration: " + messages.get(msg_i).getDuration());

@@ -19,6 +19,10 @@ import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.data.xy.XYDataset;
 
+/**
+ * 
+ * @author Ericj 由IperfConfig.java调用，显示当前Capture网络下的带宽。
+ */
 public class BandWidth {
 	private TimeSeries series;
 	private ChartPanel chartPanel;
@@ -55,13 +59,23 @@ public class BandWidth {
 		return result;
 	}
 
-	private void exec(String ipString, String desport, String locport)
+	/**
+	 * 
+	 * @param desip
+	 * @param desport
+	 * @param locport
+	 * @throws IOException
+	 * 测试UDP的双向传输
+	 * 客户端使用参数-d以运行双测试模式，客户端会与服务端进行udp往返测试。可以使用-L参数指定本端双测试监听的端口。
+	 */
+	private void exec(String desip, String desport, String locport)
 			throws IOException {
 		String[] cmd = new String[] {
 				"cmd.exe",
 				"/c",
-				"iperf -c " + ipString + " -p " + desport
+				"iperf -c " + desip + " -p " + desport
 						+ " -i 1 -t 5 -u -b 10M -d -L " + locport };
+		System.out.println(cmd[2]);
 		Process process = Runtime.getRuntime().exec(cmd);
 		BufferedReader br = new BufferedReader(new InputStreamReader(
 				process.getInputStream()));
@@ -86,7 +100,14 @@ public class BandWidth {
 		}
 	}
 
-	public void show(String ipString, String desport, String locport) {
+	/**
+	 * 
+	 * @param desip
+	 * @param desport
+	 * @param locport
+	 *            向目标机请求数据，获得数据并进行状态显示。
+	 */
+	public void show(String desip, String desport, String locport) {
 		JFrame frame = new JFrame("网络带宽统计") {
 			@Override
 			public void dispose() {
@@ -106,14 +127,17 @@ public class BandWidth {
 			public void run() {
 				// TODO Auto-generated method stub
 				try {
-					exec(ipString, desport, locport);
-				}
-				catch (IOException e) {
+					exec(desip, desport, locport);
+				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
 		};
 		timer.schedule(tt, 0, 5000);
+	}
+
+	public static void main(String[] args) {
+		(new BandWidth()).show("192.168.236.128", "5116", "50236");
 	}
 }

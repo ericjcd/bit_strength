@@ -1,7 +1,12 @@
 package com.bit.strength.util;
 
 import jpcap.packet.Packet;
-
+/**
+ * 
+ * @author Ericj
+ * Capture中抓取到的每行数据的数据内容。packet存储包的数据具体内容
+ * count存储该条内容的序列
+ */
 public class PacketCountPair {
 	private Packet packet;
 	private int count;

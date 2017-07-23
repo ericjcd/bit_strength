@@ -4,6 +4,7 @@ import java.beans.PropertyVetoException;
 import java.io.BufferedReader;
 import java.net.DatagramPacket;
 import java.net.Inet4Address;
+import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.sql.SQLException;
 import java.sql.Connection;
@@ -19,7 +20,7 @@ public class DataStorage {
 	private final static String driverClassName = "com.mysql.jdbc.Driver";
 	private final static String jdbc_url = "jdbc:mysql://localhost:3306/bit_strength?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true";
 	private final static String jdbc_username = "root";
-	private final static String jdbc_password = "";
+	private final static String jdbc_password = "bitStrengthDB@)!^";
 	private final static int jdbc_initPoolSize = 5;
 	private final static int jdbc_maxPoolSize = 10;
 	// c3p0 connection pool
@@ -65,13 +66,42 @@ public class DataStorage {
 	String sql = "insert into ";
 
 	// Save UDP received data
-	public void storageDataAtLocal(int type, DatagramPacket udpPacket) {
-
+	public int storageDataAtLocal(int type, DatagramPacket udpPacket) {
+		if (type != UDP) {
+			return 0;
+		}
+		sql += "UDPData_Table(ip, ports, messages) values(?,?,?);";
+		Object[] param = { udpPacket.getAddress().toString(),
+				String.valueOf(udpPacket.getPort()),
+				udpPacket.getData().toString()
+				};
+		
+		try {
+			queryRunner.update(sql, param);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			System.out.println("Failed to update udp_Data to DB");
+			e.printStackTrace();
+		}
+		return 1;
 	}
 
 	// Save TCP received data
-	public void storageDataAtLocal(int type, BufferedReader tcpBufferedReader) {
-
+	public int storageDataAtLocal(int type, InetAddress addr, int port, byte[] data, String recData) {
+		if (type != TCP) {
+			return 0;
+		}
+		sql += "TCPData_Table(ip, ports, messages, recData) values(?,?,?,?);";
+		Object[] param = { addr.toString(), String.valueOf(port), data.toString(), recData };
+		
+		try {
+			queryRunner.update(sql, param);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			System.out.println("Failed to update tcp_Data to DB");
+			e.printStackTrace();
+		}
+		return 1;
 	}
 
 	// Save ARP received data
@@ -98,8 +128,28 @@ public class DataStorage {
 	}
 
 	// Save ICMP received data
-	public void storageDataAtLocal(int type, ICMPPacket icmpPacket) {
-
+//	public void storageDataAtLocal(int type, ICMPPacket icmpPacket) {
+//
+//	}
+	public int storageDataAtLocal(int type, ICMPPacket icmpPacket) {
+		if (type != ICMP) {
+			return 0;
+		}
+		sql += "ICMPData_Table(type, id, seq, orig_timestamp, data) values(?,?,?,?,?);";
+		Object[] param = { String.valueOf(icmpPacket.type),
+				String.valueOf(icmpPacket.id),
+				String.valueOf(icmpPacket.seq),
+				String.valueOf(icmpPacket.orig_timestamp),
+				icmpPacket.data.toString() };
+		
+		try {
+			queryRunner.update(sql, param);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			System.out.println("Failed to update icmp_Data to DB");
+			e.printStackTrace();
+		}
+		return 1;
 	}
 
 	public final static int UDP = 0;
@@ -129,5 +179,7 @@ public class DataStorage {
 
 //		ds.setARPData(0, packet);
 		ds.storageDataAtLocal(ARP, packet);
+		
+		 
 	}
 }

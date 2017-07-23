@@ -10,26 +10,38 @@ import javax.swing.JButton;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
 
 import javax.swing.JRadioButton;
+
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.Text;
+
+import com.bit.strength.util.PacketCountPair;
+import com.bit.strength.util.PacketDecode;
+
+import jpcap.PacketReceiver;
+import jpcap.packet.Packet;
+import jpcap.packet.TCPPacket;
+import jpcap.packet.UDPPacket;
 
 public class IperfConfig extends JFrame {
 
 	private JPanel contentPane;
-	private JTextField textField;
+	private JTextField tf_targetIP;
 	private JLabel label;
-	private JTextField textField_1;
+	private JTextField tf_targetPort;
 	private JLabel label_1;
-	private JTextField textField_2;
+	private JTextField tf_localPort;
 	private JLabel label_2;
-
 	/*
 	 * public static void main(String[] args) { EventQueue.invokeLater(new
 	 * Runnable() { public void run() { try { IperfConfig frame = new
 	 * IperfConfig(); frame.setVisible(true); } catch (Exception e) {
 	 * e.printStackTrace(); } } }); }
 	 */
-
 	/**
 	 * Create the frame.
 	 */
@@ -46,31 +58,31 @@ public class IperfConfig extends JFrame {
 		lblip.setBounds(33, 30, 54, 15);
 		contentPane.add(lblip);
 		// 目标IP
-		textField = new JTextField();
-		textField.setText("192.168.31.1");
-		textField.setBounds(93, 30, 92, 15);
-		contentPane.add(textField);
-		textField.setColumns(10);
+		tf_targetIP = new JTextField();
+		tf_targetIP.setText("192.168.31.1");
+		tf_targetIP.setBounds(93, 30, 92, 15);
+		contentPane.add(tf_targetIP);
+		tf_targetIP.setColumns(10);
 		// 目标端口 label
 		label = new JLabel("\u76EE\u6807\u7AEF\u53E3");
 		label.setBounds(211, 30, 54, 15);
 		contentPane.add(label);
 		// 目标端口
-		textField_1 = new JTextField();
-		textField_1.setText("12345");
-		textField_1.setBounds(273, 29, 59, 16);
-		contentPane.add(textField_1);
-		textField_1.setColumns(10);
+		tf_targetPort = new JTextField();
+		tf_targetPort.setText("12345");
+		tf_targetPort.setBounds(273, 29, 59, 16);
+		contentPane.add(tf_targetPort);
+		tf_targetPort.setColumns(10);
 		// 本地端口 label
 		label_1 = new JLabel("\u672C\u5730\u7AEF\u53E3");
 		label_1.setBounds(211, 68, 54, 15);
 		contentPane.add(label_1);
 		// 本地端口
-		textField_2 = new JTextField();
-		textField_2.setText("30000");
-		textField_2.setBounds(273, 68, 59, 16);
-		contentPane.add(textField_2);
-		textField_2.setColumns(10);
+		tf_localPort = new JTextField();
+		tf_localPort.setText("30000");
+		tf_localPort.setBounds(273, 68, 59, 16);
+		contentPane.add(tf_localPort);
+		tf_localPort.setColumns(10);
 		// 显示内容
 		label_2 = new JLabel("\u663E\u793A\u5185\u5BB9");
 		label_2.setBounds(33, 119, 54, 15);
@@ -94,42 +106,50 @@ public class IperfConfig extends JFrame {
 		bg.add(radiobutton_2);
 
 		// 确定
-		JButton button = new JButton("\u786E\u5B9A");
-		button.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				if (radiobutton.isSelected()) {
-					// 带宽
-					BandWidth bandWidth = new BandWidth();
-					bandWidth.show(textField.getText(), textField_1.getText(),
-							textField_2.getText());
-				} else if (radiobutton_1.isSelected()) {
-					// 丢包率
-					Lost lost = new Lost();
-					lost.show(textField.getText(), textField_1.getText(),
-							textField_2.getText());
-				} else if (radiobutton_2.isSelected()) {
-					// 时延
-					Jitter jitter = new Jitter();
-					jitter.show(textField.getText(), textField_1.getText(),
-							textField_2.getText());
+		JButton button_confirm = new JButton("\u786E\u5B9A");
+		button_confirm.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {	
+				if(!radiobutton.isSelected() && !radiobutton_1.isSelected() && !radiobutton_2.isSelected()){
+					javax.swing.JOptionPane.showMessageDialog(contentPane, "\u672a\u9009\u62e9\u6570\u636e\u663e\u793a\u9879");
 				}
-				close();
-			}
+				else{
+					if (radiobutton.isSelected()) {
+						// 带宽
+						BandWidth bandWidth = new BandWidth();
+						bandWidth.show(tf_targetIP.getText(), tf_targetPort.getText(),
+								tf_localPort.getText());
+						close();
+					} else if (radiobutton_1.isSelected()) {
+						// 丢包率
+						Lost lost = new Lost();
+						lost.show(tf_targetIP.getText(), tf_targetPort.getText(),
+								tf_localPort.getText());
+						close();
+					} else if (radiobutton_2.isSelected()) {
+						// 时延
+						Jitter jitter = new Jitter();
+						jitter.show(tf_targetIP.getText(), tf_targetPort.getText(),
+								tf_localPort.getText());
+						close();
+					}
+				}
+				
+			}		
 		});
-		button.setBounds(93, 162, 93, 23);
-		contentPane.add(button);
+		button_confirm.setBounds(93, 162, 93, 23);
+		contentPane.add(button_confirm);
 		// 取消
-		JButton button_1 = new JButton("\u53D6\u6D88");
-		button_1.addActionListener(new ActionListener() {
+		JButton button_cancel = new JButton("\u53D6\u6D88");
+		button_cancel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				close();
 			}
 		});
-		button_1.setBounds(239, 162, 93, 23);
-		contentPane.add(button_1);
+		button_cancel.setBounds(239, 162, 93, 23);
+		contentPane.add(button_cancel);
 
 	}
-
+	
 	private void close() {
 		this.dispose();
 	}

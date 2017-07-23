@@ -75,6 +75,10 @@ import org.eclipse.wb.swt.SWTResourceManager;
 import org.eclipse.swt.widgets.Combo;
 
 public class Capture extends ViewPart {
+	/**
+	 * The ID of the view as specified by the extension.
+	 */
+	public static final String ID = "com.bit.strength.views.Capture";
 	private TableViewer tableViewer;
 	ArrayList<PacketCountPair> contentBakUp = null;
 	// ArrayList<RawPacket> rawContent = null;
@@ -96,7 +100,7 @@ public class Capture extends ViewPart {
 	private Text regixText;
 	private Combo combo;
 	private NetworkInterface[] devices = JpcapCaptor.getDeviceList();
-
+	private IperfConfig captureState = new IperfConfig();;
 	// private String[] devs = null;
 
 	class ViewContentProvider implements IStructuredContentProvider {
@@ -171,7 +175,6 @@ public class Capture extends ViewPart {
 	}
 
 	public Capture() {
-		// TODO Auto-generated constructor stub
 		// rawContent = new ArrayList<RawPacket>();
 		System.out.println("Available network devices on your machine:");
 		// devs = PacketCapture.lookupDevices();
@@ -184,19 +187,15 @@ public class Capture extends ViewPart {
 					.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
 		}
 		catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		catch (InstantiationException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		catch (UnsupportedLookAndFeelException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -482,10 +481,9 @@ public class Capture extends ViewPart {
 		TableColumn tblclmnHex = tableViewerColumn_10.getColumn();
 		tblclmnHex.setWidth(100);
 		tblclmnHex.setText("Hex");
-		// TODO Auto-generated method stub
 
 		tableViewer.setContentProvider(new ViewContentProvider());
-		tableViewer.setLabelProvider(new ViewLabelProvider());
+		tableViewer.setLabelProvider(new ViewLabelProvider());//绑定Packet类抓取到的包内容。
 		tableViewer.setSorter(new NameSorter());
 		tableViewer.setInput(new ArrayList<>());
 		tableViewer.getTable().setHeaderVisible(true);
@@ -495,6 +493,7 @@ public class Capture extends ViewPart {
 		TableEditor editor = new TableEditor(table);
 		editor.horizontalAlignment = SWT.LEFT;
 		editor.grabHorizontal = true;
+		//数据选中监听事件
 		table.addMouseListener(new MouseAdapter() {
 			public void mouseDown(MouseEvent event) {
 				Control old = editor.getEditor();
@@ -521,6 +520,7 @@ public class Capture extends ViewPart {
 				text.setForeground(item.getForeground());
 				text.selectAll();
 				text.setFocus();
+				text.setDoubleClickEnabled(false);
 
 				editor.minimumWidth = text.getBounds().width;
 				editor.setEditor(text, item, column);
@@ -680,7 +680,7 @@ public class Capture extends ViewPart {
 		contentBakUp = null;
 		docapture = true;
 		thread = new Thread(new CaptureRunnable(m_pcap, filter,
-				new PacketHandler(tableViewer, this, m_pcap)));
+				new PacketHandler(tableViewer, this, m_pcap)/*, captureState*/));
 		thread.start();
 	}
 
@@ -762,7 +762,6 @@ public class Capture extends ViewPart {
 				 */
 			}
 			catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -803,7 +802,7 @@ public class Capture extends ViewPart {
 			Thread thread = new Thread(new Runnable() {
 				@Override
 				public void run() {
-					// TODO Auto-generated method stub
+					
 					lock(false);
 					try {
 						JpcapCaptor captor = JpcapCaptor.openFile(f);
@@ -815,7 +814,6 @@ public class Capture extends ViewPart {
 					}
 					catch (IOException e) {
 						System.out.println("fail to open file");
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 					finally {
@@ -831,7 +829,7 @@ public class Capture extends ViewPart {
 			 * m_pcap)); pcap.addRawPacketListener(new
 			 * RawPacketHandler(rawContent)); pcap.capture(-1); } catch
 			 * (CaptureFileOpenException | InvalidFilterException |
-			 * CapturePacketException e) { // TODO Auto-generated catch block
+			 * CapturePacketException e) { 
 			 * e.printStackTrace(); }
 			 */
 		}
@@ -843,9 +841,9 @@ public class Capture extends ViewPart {
 		statusAction = new Action() {
 			public void run() {
 				// showMessage("statusAction executed");
-				IperfConfig frame = new IperfConfig();
-				frame.setVisible(true);
-				frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+				IperfConfig stateFrame = new IperfConfig();
+				stateFrame.setVisible(true);
+				stateFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 			}
 		};
 		statusAction.setText("查看网络状态");
@@ -898,7 +896,6 @@ public class Capture extends ViewPart {
 			m_pcap = JpcapCaptor.openDevice(m_device, 65535, false, 2000);
 		}
 		catch (IOException e) {
-			// TODO Auto-generated catch block
 			System.out.println("the devices cannot be open");
 			e.printStackTrace();
 		}
@@ -916,7 +913,6 @@ public class Capture extends ViewPart {
 
 	@Override
 	public void setFocus() {
-		// TODO Auto-generated method stub
 
 	}
 }

@@ -63,15 +63,17 @@ public class TCPRunnable extends IPRunnable {
 					// receive data
 					if (messages.get(i).isReceiveNext()) {
 						String line;
+						String recData = "";
 						int cnt = 0;
 						startTimeForUpdate = System.currentTimeMillis();
 						while ((line = bufferedReader.readLine()) != null) {
 							cnt += line.length();
+							recData += line + "\n";
 						}
 						endTimeForUpdate = System.currentTimeMillis();
 						collector.update(endTimeForUpdate - startTimeForUpdate,
 								0, 0, 1, cnt);
-						this.dataStorage.storageDataAtLocal(1, bufferedReader);
+						this.dataStorage.storageDataAtLocal(1, addr, port, data, recData);
 					}
 					count++;
 					// when to stop
